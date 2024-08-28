@@ -1,0 +1,37 @@
+Get http://localhost:3000/api/word_game?sentence=the sentence you want to analyze'
+####
+
+//api/word_game?sentence=<the sentence you want to analyze>
+
+Get http://localhost:3000/api/phonebill?call=call&sms=sms
+///Get http://localhost:3000/api/hello?name=andre&surname=well
+
+###
+post http://localhost:3000/api/phonebill HTTP/1.1
+content-type: application/json
+
+{
+   "bill": "call,sms,call"
+
+}
+###
+post http://localhost:3000/api/phonebillprice HTTP/1.1
+content-type: application/json
+
+{
+   "type" : "sms",
+   "price" : 2.85
+   
+
+
+}
+
+####
+post http://localhost:3000/api/enoughairtime HTTP/1.1
+content-type: application/json
+
+{
+  "usage": "call,sms,call",
+   "available" : 54
+
+}
