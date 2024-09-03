@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpine.js API Widget</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.10.3/dist/cdn.min.js"></script>
+</head>
+<body>
+
+<div x-data="wordGameWidget()" class="p-4">
+    <h2>Word Game</h2>
+    <input x-model="sentence" type="text" placeholder="Enter a sentence" class="border p-2">
+    <button @click="fetchWordGame()" class="bg-blue-500 text-white p-2">Analyze Sentence</button>
+    <div x-show="wordGameResult">
+        <p><strong>Longest Word:</strong> <span x-text="wordGameResult.longestWord"></span></p>
+        <p><strong>Shortest Word:</strong> <span x-text="wordGameResult.shortestWord"></span></p>
+        <p><strong>Word Lengths:</strong> <span x-text="wordGameResult.wordLengths"></span></p>
+    </div>
+</div>
+
+<div x-data="phoneBillWidget()" class="p-4">
+    <h2>Phone Bill</h2>
+    <input x-model="bill" type="text" placeholder="Enter calls and SMS" class="border p-2">
+    <button @click="fetchPhoneBill()" class="bg-green-500 text-white p-2">Calculate Bill</button>
+    <div x-show="phoneBillResult">
+        <p><strong>Total Bill:</strong> <span x-text="phoneBillResult.bill"></span></p>
+    </div>
+</div>
+
+<div x-data="phoneBillPriceWidget()" class="p-4">
+    <h2>Set Phone Bill Price</h2>
+    <select x-model="type" class="border p-2">
+        <option value="call">Call</option>
+        <option value="sms">SMS</option>
+    </select>
+    <input x-model="price" type="number" step="0.01" placeholder="Enter price" class="border p-2">
+    <button @click="setPhoneBillPrice()" class="bg-yellow-500 text-white p-2">Set Price</button>
+    <div x-show="phoneBillPriceResult">
+        <p><strong>Status:</strong> <span x-text="phoneBillPriceResult.status"></span></p>
+        <p><strong>Message:</strong> <span x-text="phoneBillPriceResult.message"></span></p>
+    </div>
+</div>
+
+<div x-data="enoughAirtimeWidget()" class="p-4">
+    <h2>Enough Airtime</h2>
+    <input x-model="usage" type="text" placeholder="Enter usage" class="border p-2">
+    <input x-model="available" type="number" step="0.01" placeholder="Enter available airtime" class="border p-2">
+    <button @click="fetchEnoughAirtime()" class="bg-red-500 text-white p-2">Check Airtime</button>
+    <div x-show="enoughAirtimeResult">
+        <p><strong>Total Remaining:</strong> <span x-text="enoughAirtimeResult.total"></span></p>
+    </div>
+</div>
+
+<script>
+    function wordGameWidget() {
+        return {
+            sentence: '',
+            wordGameResult: null,
+            async fetchWordGame() {
+                const response = await fetch(`/api/word_game?sentence=${this.sentence}`);
+                this.wordGameResult = await response.json();
+            }
+        };
+    }
+
+    function phoneBillWidget() {
+        return {
+            bill: '',
+            phoneBillResult: null,
+            async fetchPhoneBill() {
+                const response = await fetch('/api/phonebill', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ bill: this.bill })
+                });
+                this.phoneBillResult = await response.json();
+            }
+        };
+    }
+
+    function phoneBillPriceWidget() {
+        return {
+            type: 'sms',
+            price: '',
+            phoneBillPriceResult: null,
+            async setPhoneBillPrice() {
+                const response = await fetch('/api/phonebillprice', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: this.type, price: this.price })
+                });
+                this.phoneBillPriceResult = await response.json();
+            }
+        };
+    }
+
+    function enoughAirtimeWidget() {
+        return {
+            usage: '',
+            available: '',
+            enoughAirtimeResult: null,
+            async fetchEnoughAirtime() {
+                const response = await fetch('/api/enoughairtime', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usage: this.usage, available: this.available })
+                });
+                this.enoughAirtimeResult = await response.json();
+            }
+        };
+    }
+</script>
+
+</body>
+</html>

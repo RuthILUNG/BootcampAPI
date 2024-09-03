@@ -1,5 +1,8 @@
 import express from 'express';
 const app = express();
+import cors from 'cors';
+app.use(cors());
+app.use(express.static('public'));
 import { shortestWord, longestWord, wordLengths } from './wordgame.js';
 import { totalPhoneBill } from './phonebill.js';
 import { enoughAirtime } from './Enoughairtime.js';
